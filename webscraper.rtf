@@ -1,0 +1,60 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2513
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fmodern\fcharset0 Courier;\f1\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red184\green130\blue220;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\cssrgb\c77647\c60000\c89020;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs21\fsmilli10800 \cf2 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 pip \cf3 \strokec3 install\cf2 \strokec2  requests beautifulsoup4 pandas
+\fs24 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f1 \cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+\
+import requests\
+from bs4 import BeautifulSoup\
+import pandas as pd\
+\
+def scrape_website(url):\
+    # Send a GET request to the website\
+    response = requests.get(url)\
+    \
+    # Check if the request was successful\
+    if response.status_code != 200:\
+        print(f"Failed to retrieve data from \{url\}. Status code: \{response.status_code\}")\
+        return None\
+    \
+    # Parse the HTML content\
+    soup = BeautifulSoup(response.content, 'html.parser')\
+    \
+    # Extract data (modify this part based on the website structure)\
+    data = []\
+    for item in soup.find_all('h2'):  # Example: extracting all <h2> tags\
+        title = item.get_text(strip=True)\
+        data.append(\{'Title': title\})\
+    \
+    return data\
+\
+def main():\
+    # Prompt user for the website URL\
+    url = input("Enter the website URL to scrape: ")\
+    \
+    # Scrape the website\
+    scraped_data = scrape_website(url)\
+    \
+    if scraped_data:\
+        # Convert the scraped data into a DataFrame\
+        df = pd.DataFrame(scraped_data)\
+        \
+        # Display the DataFrame\
+        print("\\nScraped Data:")\
+        print(df)\
+        \
+        # Save the DataFrame to a CSV file\
+        df.to_csv('scraped_data.csv', index=False)\
+        print("\\nData saved to 'scraped_data.csv'.")\
+\
+if __name__ == "__main__":\
+    main()}
